@@ -1,0 +1,43 @@
+{
+  "name": "njs",
+  "version": "0.0.0",
+  "description": "JavaScript library for dependency injection",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --reporter=text mocha --recursive",
+    "lint": "standard --fix --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radyak/njs.git"
+  },
+  "keywords": [
+    "dependency injection",
+    "inversion of control",
+    "application context",
+    "ioc",
+    "di"
+  ],
+  "author": "Florian Vogel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radyak/njs/issues"
+  },
+  "homepage": "https://github.com/radyak/njs#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "standard": "^12.0.1"
+  },
+  "standard": {
+    "globals": [
+      "Configuration",
+      "Dependency",
+      "Provider"
+    ],
+    "env": [
+      "mocha"
+    ]
+  }
+}
