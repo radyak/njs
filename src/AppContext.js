@@ -85,6 +85,20 @@ AppContext.register = function (name, component, profile = 'default') {
   }
 }
 
+AppContext.unregister = function (name) {
+  if (forbiddenToOverrideProperties.indexOf(name) !== -1) {
+    throw new Error(`Unregistration with keys ${forbiddenToOverrideProperties.join(', ')} is not allowed`)
+  }
+  if (!TypeUtil.isString(name) || !name.trim()) {
+    throw new Error(
+      `Components must be unregistered with a non-empty name of type *string*, but was tried with ${name} (type: ${typeof name})`
+    )
+  }
+  var key = name.trim().toLowerCase()
+
+  delete Context[key]
+}
+
 var isProfileActive = function (profile) {
   return isDefaultProfile(profile) || activeProfiles.indexOf(profile) !== -1
 }

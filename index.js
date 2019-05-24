@@ -1,3 +1,2 @@
-const AppContext = require('src/AppContext')
-
+const AppContext = require('./src/AppContext')
 module.exports = AppContext

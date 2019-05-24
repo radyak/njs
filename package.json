@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=text mocha --recursive",
+    "test:report": "nyc --reporter=lcov mocha --recursive",
     "lint": "standard --fix --verbose"
   },
   "repository": {
