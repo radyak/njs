@@ -3,26 +3,13 @@ var AppContext = require('../../src/AppContext')
 
 describe('AppContext - Profiles', function () {
   
+
+  
   beforeEach(() => {
     AppContext.unregister('dep')
   })
 
 
-  /*
-    To Test:
-      * default profile (implicit & explicit)
-      * existing other profile
-      * [Error] non-existing other profile
-      * [Error] non-string profile
-      * multiple profiles
-        * as array
-        * as varargs
-        * 
-      * Configure profile through
-        * .profiles() method
-        * Env variable
-        * Combinations of the above
-  */
 
   it('should use profile "default" by default', function () {
 
@@ -55,7 +42,9 @@ describe('AppContext - Profiles', function () {
       AppContext.dep
       done('Should have thrown error due to unregistered component')
     } catch (e) {
-      expect(e.toString()).to.equal("Error: No component with name 'dep' / key 'dep' present in AppContext")
+      expect(e.toString()).to.equal(
+        "Error: No component with name 'dep' / key 'dep' present in AppContext"
+      )
       done()
     }
 
@@ -98,6 +87,21 @@ describe('AppContext - Profiles', function () {
     AppContext.register('dep', {property: 4}, 'thatProfile')
 
     expect(AppContext.dep).to.deep.equal({property: 3})
+
+  })
+
+
+  it('should throw error on registering with non-string profile', function (done) {
+    
+    try {
+      AppContext.register('dep', {property: 1}, 17)
+      done('Should have thrown error due to unregistered component')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: Profiles must be a non-empty name of type *string*, but was tried with 17 (type: number)"
+      )
+      done()
+    }
 
   })
 

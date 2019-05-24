@@ -97,6 +97,35 @@ describe('AppContext', function () {
       )
       done()
     }
+
+  })
+
+  it('should throw error on unregistering protected methods', function (done) {
+    
+    try {
+      AppContext.unregister('register')
+      done('Should have thrown error')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: Unregistration with keys register, unregister, provider, profiles, start, scan is not allowed"
+      )
+      done()
+    }
+    
+  })
+
+  it('should throw error on unregistering with non-string name', function (done) {
+    
+    try {
+      AppContext.unregister(17)
+      done('Should have thrown error')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: Components must be unregistered with a non-empty name of type *string*, but was tried with 17 (type: number)"
+      )
+      done()
+    }
+    
   })
 
 })
