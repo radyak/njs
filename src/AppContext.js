@@ -99,6 +99,14 @@ AppContext.unregister = function (name) {
   delete Context[key]
 }
 
+AppContext.clear = function () {
+  for (let key in AppContext) {
+    if (forbiddenToOverrideProperties.indexOf(key) === -1) {
+      AppContext.unregister(key)
+    }
+  }
+}
+
 var isProfileActive = function (profile) {
   return isDefaultProfile(profile) || activeProfiles.indexOf(profile) !== -1
 }

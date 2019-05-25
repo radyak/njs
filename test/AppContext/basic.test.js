@@ -2,7 +2,13 @@ var expect = require('chai').expect
 var AppContext = require('../../src/AppContext')
 
 describe('AppContext', function () {
+
+
+  beforeEach(() => {
+    AppContext.clear()
+  })
   
+
   it('should throw an Error when registering components with invalid names', function (done) {
     var obj = { key: 'value' }
     try {
@@ -107,7 +113,7 @@ describe('AppContext', function () {
       done('Should have thrown error')
     } catch (e) {
       expect(e.toString()).to.equal(
-        "Error: Unregistration with keys register, unregister, provider, profiles, start, scan is not allowed"
+        "Error: Unregistration with keys register, unregister, clear, provider, profiles, start, scan is not allowed"
       )
       done()
     }
@@ -126,6 +132,49 @@ describe('AppContext', function () {
       done()
     }
     
+  })
+
+  it('should clear', function (done) {
+
+    AppContext.register('dep1', {prop: 1})
+    AppContext.register('dep2', 17)
+    AppContext.register('dep3', () => 23)
+
+    expect(AppContext.dep1).to.deep.equal({prop: 1})
+    expect(AppContext.dep2).to.equal(17)
+    expect(AppContext.dep3).to.equal(23)
+    
+    AppContext.clear()
+
+    try {
+      AppContext.dep1
+      done('Should have thrown error')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: No component with name 'dep1' / key 'dep1' present in AppContext"
+      )
+    }
+
+    try {
+      AppContext.dep2
+      done('Should have thrown error')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: No component with name 'dep2' / key 'dep2' present in AppContext"
+      )
+    }
+
+    try {
+      AppContext.dep3
+      done('Should have thrown error')
+    } catch (e) {
+      expect(e.toString()).to.equal(
+        "Error: No component with name 'dep3' / key 'dep3' present in AppContext"
+      )
+    }
+
+
+    done()
   })
 
 })

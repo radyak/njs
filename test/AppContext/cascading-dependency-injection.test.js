@@ -3,6 +3,12 @@ var AppContext = require('../../src/AppContext')
 
 describe('AppContext - Cascading Dependency Injection', function () {
 
+
+  beforeEach(() => {
+    AppContext.clear()
+  })
+
+
   /**
      * COMMON MODEL:
      *
@@ -110,22 +116,25 @@ describe('AppContext - Cascading Dependency Injection', function () {
       })
     })
 
-    expect(AppContext.dep5).to.deep.equal({
-      dep3: 'dependency-3',
-      dep4: {
-        dep1: {
-          content: 'dependency-1'
+    AppContext.dep5.then(dep5 => {
+      expect(dep5).to.deep.equal({
+        dep3: 'dependency-3',
+        dep4: {
+          dep1: {
+            content: 'dependency-1'
+          },
+          dep2: {
+            dep3: 'dependency-3',
+            content: 'dependency-2'
+          },
+          content: 'dependency-4'
         },
-        dep2: {
-          dep3: 'dependency-3',
-          content: 'dependency-2'
-        },
-        content: 'dependency-4'
-      },
-      content: 'dependency-5'
+        content: 'dependency-5'
+      })
+
+      done()
     })
 
-    done()
   })
 
 })

@@ -4,11 +4,9 @@ var AppContext = require('../../src/AppContext')
 describe('AppContext - Provider', function () {
 
   
-
   beforeEach(() => {
-    AppContext.unregister('dep')
+    AppContext.clear()
   })
-
 
 
   it('should throw error on non-function provider', function (done) {

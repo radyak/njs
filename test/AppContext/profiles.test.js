@@ -4,11 +4,9 @@ var AppContext = require('../../src/AppContext')
 describe('AppContext - Profiles', function () {
   
 
-  
   beforeEach(() => {
     AppContext.unregister('dep')
   })
-
 
 
   it('should use profile "default" by default', function () {

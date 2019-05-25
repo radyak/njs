@@ -11,6 +11,9 @@ tests.continuous:
 	npm test -- -w
 	# npm test -- -w --grep 'lists files recursively'
 
+tests.report:
+	npm run test:report
+
 
 lint:
 	npm run lint

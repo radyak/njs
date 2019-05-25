@@ -4,6 +4,12 @@ var TypeUtil = require('../../src/TypeUtil')
 
 describe('AppContext - Basic Dependency Injection', function () {
 
+
+  beforeEach(() => {
+    AppContext.clear()
+  })
+
+  
   function Battery () {
     this.getEnergy = function () {
       return 'battery'
