@@ -3,4 +3,4 @@ node_js:
     - "node"
 script:
     - npm run test
-    - npm run report-coverage
+    - npm run test:coverage
