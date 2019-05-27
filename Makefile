@@ -5,13 +5,13 @@
 
 
 tests:
-	npm test
+	npm run test
 
-tests.continuous:
-	npm run test:continuous
+tests.watch:
+	npm run test:watch
 
-tests.report:
-	npm run test:report
+tests.coverage: test
+	npm run test:coverage
 
 
 lint:

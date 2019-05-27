@@ -4,10 +4,9 @@
   "description": "JavaScript library for dependency injection",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=text mocha --recursive",
-    "test:report": "nyc --reporter=lcov mocha --recursive",
+    "test": "nyc --reporter=text --reporter=lcov mocha --recursive",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "test:continuous": "mocha --recursive -- -w  --grep ''",
+    "test:watch": "mocha --recursive -- -w  --grep ''",
     "lint": "standard --fix --verbose"
   },
   "repository": {
