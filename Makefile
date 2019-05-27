@@ -8,8 +8,7 @@ tests:
 	npm test
 
 tests.continuous:
-	npm test -- -w
-	# npm test -- -w --grep 'lists files recursively'
+	npm run test:continuous
 
 tests.report:
 	npm run test:report

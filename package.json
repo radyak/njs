@@ -6,6 +6,7 @@
   "scripts": {
     "test": "nyc --reporter=text mocha --recursive",
     "test:report": "nyc --reporter=lcov mocha --recursive",
+    "test:continuous": "mocha --recursive -- -w  --grep ''",
     "lint": "standard --fix --verbose"
   },
   "repository": {

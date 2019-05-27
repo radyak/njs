@@ -100,6 +100,8 @@ AppContext.unregister = function (name) {
 }
 
 AppContext.clear = function () {
+  scanDirs = []
+  activeProfiles = []
   for (let key in AppContext) {
     if (forbiddenToOverrideProperties.indexOf(key) === -1) {
       AppContext.unregister(key)
@@ -108,11 +110,16 @@ AppContext.clear = function () {
 }
 
 var isProfileActive = function (profile) {
-  return isDefaultProfile(profile) || activeProfiles.indexOf(profile) !== -1
+  return isDefaultProfile(profile) || isEnvConfiguredProfile(profile) || activeProfiles.indexOf(profile) !== -1
 }
 
 var isDefaultProfile = function (profile) {
   return profile === 'default'
+}
+
+var isEnvConfiguredProfile = function (profile) {
+  var envVarProfiles = process.env.ACTIVE_CONTEXT_PROFILES
+  return envVarProfiles && envVarProfiles.split(/[\s,]+/).indexOf(profile) !== -1
 }
 
 AppContext.provider = function (name, providerFunction, profile = 'default') {
@@ -138,10 +145,11 @@ var scanDependencies = function () {
   for (var scanDir of scanDirs) {
     filesToScan = filesToScan.concat(FileUtil.listFilesRecursively(scanDir))
   }
-  console.log(`Scanning following files for dependencies:\n`, ',\n\t' + filesToScan.join(',\n\t'))
+  console.log(`Scanning following files for dependencies:\n`, '\t' + filesToScan.join(',\n\t'))
 
   for (var file of filesToScan) {
-    require(path.resolve('.', file))
+    let filePath = path.resolve('.', file)
+    require(filePath)
   }
 }
 

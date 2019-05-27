@@ -5,7 +5,7 @@ describe('AppContext - Profiles', function () {
   
 
   beforeEach(() => {
-    AppContext.unregister('dep')
+    AppContext.clear()
   })
 
 
@@ -65,6 +65,19 @@ describe('AppContext - Profiles', function () {
   it('should apply multiple profiles (array style)', function () {
     
     AppContext.profiles(['someProfile', 'relevantProfile', 'anotherProfile'])
+
+    AppContext.register('dep', {property: 1}, 'thisProfile')
+    AppContext.register('dep', {property: 2}, 'relevantProfile')
+    AppContext.register('dep', {property: 3}, 'thatProfile')
+
+    expect(AppContext.dep).to.deep.equal({property: 2})
+
+  })
+
+
+  it('should apply multiple profiles (ENV variable style)', function () {
+    
+    process.env.ACTIVE_CONTEXT_PROFILES = 'someProfile, relevantProfile, anotherProfile'
 
     AppContext.register('dep', {property: 1}, 'thisProfile')
     AppContext.register('dep', {property: 2}, 'relevantProfile')
