@@ -2,5 +2,5 @@ language: node_js
 node_js:
     - "node"
 script:
-    - nyc report --reporter=text-lcov > coverage.lcov
+    - ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
     - ./node_modules/.bin/codecov
