@@ -4,17 +4,15 @@ var AppContext = require('../../src/AppContext')
 describe('AppContext - Bootstrap', function () {
 
   
+
   beforeEach(() => {
     AppContext.clear()
+    AppContext.configure({
+      useGlobals: true
+    })
   })
 
-    // AppContext
-    //   .scan([
-    //     'src/dependencies'
-    //   ])
-    //   .start((dep1, dep2) => {
-    //     //...
-    //   })
+
 
   it('should bootstraps empty context', function(done) {
 
@@ -28,12 +26,15 @@ describe('AppContext - Bootstrap', function () {
 
     // TODO: Better throw an error here ...
 
-    AppContext.start((someDependency) => {
-      done('Should have thrown an error')
-    })
+    try {
+      AppContext.start((someDependency) => {
+        done('Should have thrown an error')
+      })
+    } catch (e) {
+      expect(e.toString()).to.equal('Error: Could not start njs context. There are probably unsatisfied dependencies')
+      done()
+    }
     
-    done()
-
   })
 
   it('should inject dependencies after start', function(done) {

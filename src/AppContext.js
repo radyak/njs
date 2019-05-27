@@ -102,11 +102,17 @@ AppContext.unregister = function (name) {
 AppContext.clear = function () {
   scanDirs = []
   activeProfiles = []
+
   for (let key in AppContext) {
     if (forbiddenToOverrideProperties.indexOf(key) === -1) {
       AppContext.unregister(key)
     }
   }
+
+  delete global.AppContext
+  delete global.Dependency
+  delete global.Provider
+  delete global.Configuration
 }
 
 var isProfileActive = function (profile) {
@@ -145,19 +151,12 @@ var scanDependencies = function () {
   for (var scanDir of scanDirs) {
     filesToScan = filesToScan.concat(FileUtil.listFilesRecursively(scanDir))
   }
+
   console.log(`Scanning following files for dependencies:\n`, '\t' + filesToScan.join(',\n\t'))
 
   for (var file of filesToScan) {
     let filePath = path.resolve('.', file)
     require(filePath)
-  }
-}
-
-var addEnvironmentConfiguredProfiles = function () {
-  var envVarProfiles = process.env.ACTIVE_CONTEXT_PROFILES
-  if (envVarProfiles) {
-    envVarProfiles = envVarProfiles.split(/[\s,]+/)
-    activeProfiles = activeProfiles.concat(envVarProfiles)
   }
 }
 
@@ -174,14 +173,17 @@ AppContext.profiles = function (profiles) {
 }
 
 AppContext.start = function (callback) {
-  addEnvironmentConfiguredProfiles()
-  console.log(`Active profiles:\n`, activeProfiles.join(',\n\t'))
+  console.log(`Active profiles:\n`, `\t` + activeProfiles.join(',\n\t'))
 
   scanDependencies()
-  console.log(`Registered context components (by key):\n`, Object.keys(Context).join(',\n\t'))
+  console.log(`Registered context components (by key):\n`, `\t` + Object.keys(Context).join(',\n\t'))
 
   AppContext.provider('Main', callback)
-  return AppContext.Main
+  const result = AppContext.Main
+  if (result) {
+    return result
+  }
+  throw new Error('Could not start njs context. There are probably unsatisfied dependencies')
 }
 
 AppContext.scan = function (directories) {
@@ -195,11 +197,21 @@ AppContext.scan = function (directories) {
   return AppContext
 }
 
-const forbiddenToOverrideProperties = Object.keys(AppContext)
+AppContext.configure = function(configuration) {
 
-global.AppContext = AppContext
-global.Dependency = AppContext.register
-global.Provider = AppContext.provider
-global.Configuration = AppContext.provider
+  if (configuration && !!configuration.useGlobals) {
+    global.AppContext = AppContext
+    global.Dependency = AppContext.register
+    global.Provider = AppContext.provider
+    global.Configuration = AppContext.provider
+  } else {
+    delete global.AppContext
+    delete global.Dependency
+    delete global.Provider
+    delete global.Configuration
+  }
+}
+
+const forbiddenToOverrideProperties = Object.keys(AppContext)
 
 module.exports = AppContext
