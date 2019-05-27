@@ -115,7 +115,7 @@ describe('AppContext - Bootstrap', function () {
           done('Should have thrown an error')
         })
     } catch (e) {
-      expect(e.toString()).to.equal("Error: ENOENT: no such file or directory, scandir '/home/fvo/private/dev/radshift/njs/test-data/ApplicationContext/doesntexist'")
+      expect(e.toString()).to.match(new RegExp("Error: ENOENT: no such file or directory, scandir '.*njs/test-data/ApplicationContext/doesntexist'"))
       done()
     }
 
