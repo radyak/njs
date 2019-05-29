@@ -17,7 +17,7 @@ describe('AppContext - Configuration', function () {
         useGlobals: true
     })
 
-    Dependency('arandomdependency', 17)
+    Component('arandomdependency', 17)
 
     done()
 
@@ -26,10 +26,10 @@ describe('AppContext - Configuration', function () {
   it('should throw error when using globals without useGlobals property', function (done) {
 
     try {
-        Dependency('anotherrandomdependency', 18)
+        Component('anotherrandomdependency', 18)
         done('Should have thrown error')
     } catch (e) {
-        expect(e.toString()).to.equal('ReferenceError: Dependency is not defined')
+        expect(e.toString()).to.equal('ReferenceError: Component is not defined')
         done()
     }
 

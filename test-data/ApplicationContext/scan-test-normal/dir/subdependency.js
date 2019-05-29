@@ -1,3 +1,3 @@
-Dependency('subdependency', function() {
+Component('subdependency', function() {
     return { prop: 1 }
 })
