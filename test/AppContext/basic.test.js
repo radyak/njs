@@ -113,7 +113,7 @@ describe('AppContext', function () {
       done('Should have thrown error')
     } catch (e) {
       expect(e.toString()).to.equal(
-        "Error: Unregistration with keys register, unregister, clear, provider, profiles, start, scan, configure is not allowed"
+        "Error: Unregistration with keys clear, configure, profiles, provider, register, scan, start, unregister is not allowed"
       )
       done()
     }

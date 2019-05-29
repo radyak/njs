@@ -7,6 +7,9 @@ var Context = {}
 var scanDirs = []
 var activeProfiles = []
 
+/**
+ * The njs context
+ */
 var AppContext = new Proxy(Context, {
   get (target, name, receiver) {
     var key = name.trim().toLowerCase()
@@ -58,7 +61,7 @@ var instantiate = function (component) {
   return instance
 }
 
-AppContext.register = function (name, component, profile = 'default') {
+var register = function (name, component, profile = 'default') {
   if (forbiddenToOverrideProperties.indexOf(name) !== -1) {
     throw new Error(`Registration with keys ${forbiddenToOverrideProperties.join(', ')} is not allowed`)
   }
@@ -85,7 +88,7 @@ AppContext.register = function (name, component, profile = 'default') {
   }
 }
 
-AppContext.unregister = function (name) {
+var unregister = function (name) {
   if (forbiddenToOverrideProperties.indexOf(name) !== -1) {
     throw new Error(`Unregistration with keys ${forbiddenToOverrideProperties.join(', ')} is not allowed`)
   }
@@ -99,7 +102,7 @@ AppContext.unregister = function (name) {
   delete Context[key]
 }
 
-AppContext.clear = function () {
+var clear = function () {
   scanDirs = []
   activeProfiles = []
 
@@ -128,7 +131,15 @@ var isEnvConfiguredProfile = function (profile) {
   return envVarProfiles && envVarProfiles.split(/[\s,]+/).indexOf(profile) !== -1
 }
 
-AppContext.provider = function (name, providerFunction, profile = 'default') {
+
+/**
+ * Registers a dependency provider.
+ * 
+ * @param {String} name                   The name to register the provider with
+ * @param {Function} providerFunction     The provider function
+ * @param {String} [profile="default"]    The profile to register the dependency for; default value is "default"
+ */
+var provider = function (name, providerFunction, profile = 'default') {
   var dependencyNames = FunctionUtil.getFunctionParameters(providerFunction)
 
   AppContext.register(name, () => {
@@ -160,8 +171,13 @@ var scanDependencies = function () {
   }
 }
 
-AppContext.profiles = function (profiles) {
-  activeProfiles = []
+
+/**
+ * Activates the given profiles.
+ * 
+ * @param {...String|String[]} profiles The profiles to activate
+ */
+var profiles = function (profiles) {
   if (TypeUtil.isArray(profiles)) {
     activeProfiles = activeProfiles.concat(profiles)
   } else {
@@ -172,7 +188,13 @@ AppContext.profiles = function (profiles) {
   return AppContext
 }
 
-AppContext.start = function (callback) {
+
+/**
+ * Starts the njs context
+ * 
+ * @param {Function} callback             The callback function to call after the njs context startup
+ */
+var start = function (callback) {
   console.log(`Active profiles:\n`, `\t` + activeProfiles.join(',\n\t'))
 
   scanDependencies()
@@ -186,7 +208,14 @@ AppContext.start = function (callback) {
   throw new Error('Could not start njs context. There are probably unsatisfied dependencies')
 }
 
-AppContext.scan = function (directories) {
+
+/**
+ * Scans the specified directory/directories for dependency registrations.
+ * 
+ * @param {...String|String[]} directories    The directories to scan
+ * @returns                                   The njs context
+ */
+var scan = function (directories) {
   if (TypeUtil.isArray(directories)) {
     scanDirs = scanDirs.concat(directories)
   } else {
@@ -197,7 +226,14 @@ AppContext.scan = function (directories) {
   return AppContext
 }
 
-AppContext.configure = function(configuration) {
+
+
+/**
+ * Configures the njs context; accepts the following properties:
+ * 
+ * @param {Object} configuration      The configuration
+ */
+var configure = function(configuration) {
 
   if (configuration && !!configuration.useGlobals) {
     global.AppContext = AppContext
@@ -212,6 +248,15 @@ AppContext.configure = function(configuration) {
   }
 }
 
-const forbiddenToOverrideProperties = Object.keys(AppContext)
+AppContext.register = register
+AppContext.unregister = unregister
+AppContext.clear = clear
+AppContext.provider = provider
+AppContext.profiles = profiles
+AppContext.start = start
+AppContext.scan = scan
+AppContext.configure = configure
+
+const forbiddenToOverrideProperties = Object.keys(AppContext).sort()
 
 module.exports = AppContext
