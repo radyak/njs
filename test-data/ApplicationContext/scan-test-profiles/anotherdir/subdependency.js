@@ -1,3 +1,3 @@
 Component('subdependency', function() {
-    return { prop: 1 }
+    return { prop: 2 }
 }, 'envvar-configured')

@@ -97,7 +97,7 @@ describe('AppContext - Bootstrap', function () {
         'test-data/ApplicationContext/scan-test-profiles/anotherdir',
       )
       .start((dependency) => {
-        expect(dependency).to.deep.equal({sub: {prop: 1}})
+        expect(dependency).to.deep.equal({sub: {prop: 2}})
         done()
       })
 
