@@ -112,10 +112,7 @@ var clear = function () {
     }
   }
 
-  delete global.AppContext
-  delete global.Dependency
-  delete global.Provider
-  delete global.Configuration
+  AppContext.configure({})
 }
 
 var isProfileActive = function (profile) {
@@ -236,15 +233,13 @@ var scan = function (directories) {
 var configure = function(configuration) {
 
   if (configuration && !!configuration.useGlobals) {
-    global.AppContext = AppContext
-    global.Dependency = AppContext.register
+    global.Njs = AppContext
+    global.Component = AppContext.register
     global.Provider = AppContext.provider
-    global.Configuration = AppContext.provider
   } else {
-    delete global.AppContext
-    delete global.Dependency
+    delete global.Njs
+    delete global.Component
     delete global.Provider
-    delete global.Configuration
   }
 }
 
