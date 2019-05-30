@@ -1,5 +1,5 @@
 {
-  "name": "njs",
+  "name": "@radyak/njs",
   "version": "0.0.1",
   "description": "JavaScript library for dependency injection",
   "main": "index.js",
