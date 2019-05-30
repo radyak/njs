@@ -26,3 +26,6 @@ release.minor: tests
 
 release.major: tests
 	npm version major
+
+publish:
+	npm publish --access public
