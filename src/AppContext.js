@@ -241,6 +241,8 @@ var configure = function(configuration) {
     delete global.Component
     delete global.Provider
   }
+
+  return AppContext
 }
 
 AppContext.register = register
