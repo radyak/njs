@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=text --reporter=lcov mocha --recursive",
+    "test:single": "mocha --recursive --grep 'should throw error when a dependency throws an error'",
     "test:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "test:watch": "mocha --recursive -- -w  --grep ''",
     "lint": "standard --fix --verbose"

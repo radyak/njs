@@ -117,7 +117,7 @@ describe('AppContext - Basic Dependency Injection', function () {
       done('Should have thrown an Error')
     } catch (e) {
       expect(e.toString()).to.equal(
-        "Error: No component with name 'config' / key 'config' present in AppContext"
+        "Error: Error while instantiating component 'flashlight'.\n\t -> No component with name 'config' / key 'config' present in AppContext"
       )
       expect(flashlight).to.equal(undefined)
     }

@@ -28,7 +28,11 @@ var AppContext = new Proxy(Context, {
       // Not a function/constructor -> can't be instantiated (any more)
       return rv
     }
-    rv = instantiate(rv)
+    try {
+      rv = instantiate(rv)
+    } catch (error) {
+        throw new Error(`Error while instantiating component '${key}'.\n\t -> ${error.message}`)
+    }
     Context[key] = rv
     return rv
   }
@@ -45,16 +49,21 @@ var instantiate = function (component) {
   try {
     instance = component.apply(null, dependencies)
   } catch (e) {
-    // TODO: should e.message be checked for "Class constructor SolarPanel cannot be invoked without 'new'"?
-    // console.error(e.message)
+    if (e.message && e.message.indexOf("cannot be invoked without 'new'") !== -1) {
+      // Nothing to do here
+    } else {
+      throw e
+    }
   }
 
   if (instance === undefined) {
     try {
       instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
     } catch (e) {
-      // TODO: should e.message be checked for "Function.prototype.bind.apply(...) is not a constructor"?
-      // console.error(e.message)
+      // Potential check:
+      // if (e.message && e.message.indexOf('is not a constructor') !== -1) {...}
+      // currently not necessary, as `component` is already checked to be a function; arriving here would mean it is neither 
+      // a normal function nor a constructor - impossible
     }
   }
 
@@ -191,18 +200,23 @@ var profiles = function (profiles) {
  * 
  * @param {Function} callback             The callback function to call after the njs context startup
  */
-var start = function (callback) {
+var start = function (callback, errorCallback) {
   console.log(`Active profiles:\n`, `\t` + activeProfiles.join(',\n\t'))
 
   scanDependencies()
   console.log(`Registered context components (by key):\n`, `\t` + Object.keys(Context).join(',\n\t'))
 
   AppContext.provider('Main', callback)
-  const result = AppContext.Main
-  if (result) {
-    return result
+  try {
+    return AppContext.Main
+  } catch (e) {
+    let newError = new Error(`Could not start njs context. Error is: ${e.message}`)
+    if (errorCallback) {
+      errorCallback(newError)
+      return
+    }
+    throw newError
   }
-  throw new Error('Could not start njs context. There are probably unsatisfied dependencies')
 }
 
 

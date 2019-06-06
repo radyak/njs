@@ -24,14 +24,12 @@ describe('AppContext - Bootstrap', function () {
 
   it('should not start if theres an unsatisfied dependency', function(done) {
 
-    // TODO: Better throw an error here ...
-
     try {
       AppContext.start((someDependency) => {
         done('Should have thrown an error')
       })
     } catch (e) {
-      expect(e.toString()).to.equal('Error: Could not start njs context. There are probably unsatisfied dependencies')
+      expect(e.toString()).to.equal("Error: Could not start njs context. Error is: Error while instantiating component 'main'.\n\t -> No component with name 'someDependency' / key 'somedependency' present in AppContext")
       done()
     }
     
@@ -118,6 +116,56 @@ describe('AppContext - Bootstrap', function () {
       expect(e.toString()).to.match(new RegExp("Error: ENOENT: no such file or directory, scandir '.*njs/test-data/ApplicationContext/doesntexist'"))
       done()
     }
+
+  })
+
+
+  it('should throw error if a dependency throws an error', function(done) {
+
+    Component('subdependency', function() {
+        throw new Error('Simulated error')
+    })
+    
+    Provider('Dependency', function(subdependency) {
+        return {
+            sub: subdependency
+        }
+    })
+    
+    try {
+      AppContext
+        .start((Dependency) => {
+          expect(Dependency).to.equal(null)
+          done('Should have thrown an error')
+        })
+    } catch (e) {
+      expect(e.toString()).to.equal("Error: Could not start njs context. Error is: Error while instantiating component \'main\'.\n\t -> Error while instantiating component \'dependency\'.\n\t -> Error while instantiating component \'subdependency\'.\n\t -> Simulated error")
+      done()
+    }
+
+  })
+
+
+  it('should handle with a second callback if a dependency throws an error', function(done) {
+
+    Component('subdependency', function() {
+        throw new Error('Simulated error')
+    })
+    
+    Provider('Dependency', function(subdependency) {
+        return {
+            sub: subdependency
+        }
+    })
+    
+    AppContext
+      .start((Dependency) => {
+        expect(Dependency).to.equal(null)
+        done('Should have thrown an error')
+      }, (e) => {
+        expect(e.toString()).to.equal("Error: Could not start njs context. Error is: Error while instantiating component 'main'.\n\t -> Error while instantiating component 'dependency'.\n\t -> Error while instantiating component 'subdependency'.\n\t -> Simulated error")
+        done()
+      })
 
   })
 
