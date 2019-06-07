@@ -169,4 +169,46 @@ describe('AppContext - Bootstrap', function () {
 
   })
 
+
+  it('should clear require.cache', function(done) {
+    
+    AppContext
+      .scan(
+        'test-data/ApplicationContext/clear-test'
+      )
+      .start((Dependency) => {
+        expect(Dependency).to.deep.equal({ sub: { prop: 1 } })
+      }, (e) => {
+        done('Should not have thrown an error')
+      })
+
+      .then(() => {
+        AppContext.clear()
+        AppContext.configure({
+          useGlobals: true
+        })
+      })
+
+      .then(() => {
+        
+        AppContext
+          .scan(
+            'test-data/ApplicationContext/clear-test'
+          )
+          .start((Dependency) => {
+            expect(Dependency).to.deep.equal({ sub: { prop: 1 } })
+            done()
+          }, (e) => {
+            done('Should not have thrown an error, but got: ' + e.toString())
+          })
+
+      })
+
+      .catch(e => {
+        console.error('Error occurred:', e)
+        done(e)
+      })
+
+  })
+
 })

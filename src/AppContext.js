@@ -111,7 +111,25 @@ var unregister = function (name) {
   delete Context[key]
 }
 
+var clearRequireCache = function () {
+  var cachedFiles = Object.keys(require.cache)
+  var cachedContextFiles = cachedFiles.filter(cachedFile => {
+    for (var scanDir of scanDirs) {
+      if (cachedFile.indexOf(scanDir) !== -1) {
+        return true
+      }
+    }
+    return false
+  })
+
+  cachedContextFiles.forEach(contextFile => {
+    delete require.cache[contextFile]
+    console.log(`Deleted ${contextFile} from require.cache`)
+  })
+}
+
 var clear = function () {
+  clearRequireCache()
   scanDirs = []
   activeProfiles = []
 
