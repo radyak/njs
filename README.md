@@ -1,6 +1,6 @@
 # njs
 
-[![build](https://travis-ci.org/radyak/njs.svg?branch=master)]((https://travis-ci.org/radyak/njs))      [![codecov](https://codecov.io/gh/radyak/njs/branch/master/graph/badge.svg)](https://codecov.io/gh/radyak/njs)      [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![build](https://travis-ci.org/radyak/njs.svg?branch=master)](https://travis-ci.org/radyak/njs)      [![codecov](https://codecov.io/gh/radyak/njs/branch/master/graph/badge.svg)](https://codecov.io/gh/radyak/njs)      [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 *njs* [ɪnˈʤes] is a fast, zero-dependency and light-weight *Dependency Injection* library for NodeJS.
 
